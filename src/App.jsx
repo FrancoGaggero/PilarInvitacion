@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { obtenerInvitacion } from "./lib/api";
 import Portada from "./components/Portada";
 import Evento from "./components/Evento";
@@ -8,6 +8,9 @@ import Canciones from "./components/Canciones";
 import Pie from "./components/Pie";
 import SinInvitacion from "./components/SinInvitacion";
 
+// El panel se descarga solo cuando alguien entra a /panel
+const Panel = lazy(() => import("./panel/Panel"));
+
 // El código sale de /i/abc123 (producción) o de ?i=abc123 (vista previa)
 function leerCodigo() {
   const m = window.location.pathname.match(/^\/i\/([a-z0-9]+)/i);
@@ -16,6 +19,17 @@ function leerCodigo() {
 }
 
 export default function App() {
+  if (window.location.pathname.startsWith("/panel")) {
+    return (
+      <Suspense fallback={<div className="min-h-svh grid place-items-center text-suave">Cargando…</div>}>
+        <Panel />
+      </Suspense>
+    );
+  }
+  return <Invitacion />;
+}
+
+function Invitacion() {
   const [codigo, setCodigo] = useState(leerCodigo);
   const [estado, setEstado] = useState(codigo ? "cargando" : "sin-codigo");
   const [invitacion, setInvitacion] = useState(null);

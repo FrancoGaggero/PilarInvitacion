@@ -43,6 +43,22 @@ Para cambiar el esquema, siempre crear una migración nueva; nunca editar una ya
 | `GET /api/buscar?q=` | Buscador de canciones (por ahora de ejemplo) |
 | `POST /api/canciones` | Suma una canción (máximo por invitación y sin repetidas) |
 | `DELETE /api/canciones` | Quita una canción de esa invitación |
+| `POST /api/panel/login` | Ingreso al panel (devuelve un token por 7 días) |
+| `GET /api/panel/datos` | Invitaciones, confirmaciones y canciones (requiere token) |
+| `POST/PATCH/DELETE /api/panel/invitaciones` | Crear, editar y borrar invitaciones (requiere token) |
+| `DELETE /api/panel/canciones` | Quitar una canción (requiere token) |
+
+## Panel privado
+
+Está en `/panel` y se protege con la variable de entorno `PANEL_PASSWORD` (mínimo 6 caracteres), que se carga en Netlify en *Project configuration > Environment variables*. Después de crearla o cambiarla hay que hacer un nuevo deploy.
+
+Desde el panel se puede:
+
+- Pegar la lista de invitados (una por línea; `Familia Pérez, 3` para familias, solo el nombre para invitaciones personales).
+- Enviar cada invitación por WhatsApp con el mensaje ya escrito, o copiar su link.
+- Ver quién confirmó, cuántos van, restricciones alimentarias y mensajes.
+- Editar o borrar invitaciones y quitar canciones.
+- Exportar invitados y canciones a Excel.
 
 ## Dónde se cambia cada cosa
 
@@ -65,6 +81,6 @@ Invitaciones de prueba cargadas en la base: `fam7k2p` (Familia Gómez, 3), `fam9
 
 - [x] 1. Plantilla de la invitación con datos de prueba
 - [x] 2. Netlify Database y confirmaciones reales
-- [ ] 3. Panel privado (invitaciones, confirmaciones, exportar a Excel)
+- [x] 3. Panel privado (invitaciones, confirmaciones, exportar a Excel)
 - [ ] 4. Integración con Spotify
 - [ ] 5. Estilo final, fotos del book, dominio y pruebas
