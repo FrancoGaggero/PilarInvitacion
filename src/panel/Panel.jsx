@@ -2,15 +2,18 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FIESTA } from "../config/fiesta";
 import {
   leerToken, guardarToken, ingresar, obtenerDatos,
-  crearInvitaciones, editarInvitacion, borrarInvitacion, borrarCancion,
+  crearInvitaciones, editarInvitacion, borrarInvitacion, borrarCancion, registrarEnvio,
 } from "./apiPanel";
-import { linkInvitacion, linkWhatsApp, estadoDe, parsearLista, descargarCSV } from "./utilPanel";
+import {
+  linkInvitacion, linkWhatsApp, linkRecordatorio, estadoDe, parsearLista, descargarCSV, fechaCorta,
+} from "./utilPanel";
 
-const ETIQUETA_ESTADO = { confirmada: "Confirmó", "no-asiste": "No va", pendiente: "Pendiente" };
+const ETIQUETA_ESTADO = { confirmada: "Confirmó", "no-asiste": "No va", esperando: "Esperando respuesta", "sin-enviar": "Sin enviar" };
 const COLOR_ESTADO = {
   confirmada: "text-destacado border-destacado/50",
   "no-asiste": "text-alerta border-alerta/50",
-  pendiente: "text-suave border-linea",
+  esperando: "text-acento border-acento/50",
+  "sin-enviar": "text-suave border-linea",
 };
 
 export default function Panel() {
@@ -112,7 +115,8 @@ function Resumen({ invitaciones, canciones }) {
       lugares: invitaciones.reduce((s, i) => s + i.cupo, 0),
       personas: confirmadas.reduce((s, i) => s + (i.cantidad || 0), 0),
       noVan: invitaciones.filter((i) => i.asiste === false).length,
-      pendientes: invitaciones.filter((i) => i.asiste == null).length,
+      sinEnviar: invitaciones.filter((i) => estadoDe(i) === "sin-enviar").length,
+      esperando: invitaciones.filter((i) => estadoDe(i) === "esperando").length,
       restricciones: confirmadas.filter((i) => i.restricciones).length,
       canciones: canciones.length,
     };
@@ -120,13 +124,14 @@ function Resumen({ invitaciones, canciones }) {
 
   const tarjetas = [
     ["Personas confirmadas", r.personas, `de ${r.lugares} lugares asignados`],
-    ["Invitaciones pendientes", r.pendientes, `de ${r.invitaciones} enviadas`],
+    ["Sin enviar", r.sinEnviar, `de ${r.invitaciones} invitaciones`],
+    ["Esperando respuesta", r.esperando, "enviadas sin confirmar"],
     ["No van", r.noVan, r.noVan === 1 ? "invitación" : "invitaciones"],
     ["Restricciones alimentarias", r.restricciones, "invitaciones con aviso"],
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
       {tarjetas.map(([titulo, valor, detalle]) => (
         <div key={titulo} className="border border-linea rounded-campo p-4">
           <p className="text-sm text-suave m-0">{titulo}</p>
@@ -150,9 +155,11 @@ function Invitaciones({ invitaciones, onCambio, onError }) {
 
   const exportar = () => {
     descargarCSV(`invitados-15-${FIESTA.nombre.toLowerCase()}.csv`, [
-      ["Invitación", "Tipo", "Lugares", "Estado", "Van", "Nombres", "Restricciones", "Mensaje", "Link"],
+      ["Invitación", "Tipo", "Lugares", "Estado", "Enviada", "Recordatorio", "Van", "Nombres", "Restricciones", "Mensaje", "Link"],
       ...invitaciones.map((i) => [
-        i.nombre, i.tipo, i.cupo, ETIQUETA_ESTADO[estadoDe(i)], i.asiste ? i.cantidad : 0,
+        i.nombre, i.tipo, i.cupo, ETIQUETA_ESTADO[estadoDe(i)],
+        i.enviada ? fechaCorta(i.enviada) : "", i.recordatorio ? fechaCorta(i.recordatorio) : "",
+        i.asiste ? i.cantidad : 0,
         (i.nombres || []).join(", "), i.restricciones || "", i.mensaje || "", linkInvitacion(i.codigo),
       ]),
     ]);
@@ -165,7 +172,8 @@ function Invitaciones({ invitaciones, onCambio, onError }) {
           onChange={(e) => setBusqueda(e.target.value)} aria-label="Buscar invitación" />
         <select className="campo w-auto py-2" value={filtro} onChange={(e) => setFiltro(e.target.value)} aria-label="Filtrar por estado">
           <option className="text-black" value="todas">Todas</option>
-          <option className="text-black" value="pendiente">Pendientes</option>
+          <option className="text-black" value="sin-enviar">Sin enviar</option>
+          <option className="text-black" value="esperando">Esperando respuesta</option>
           <option className="text-black" value="confirmada">Confirmaron</option>
           <option className="text-black" value="no-asiste">No van</option>
         </select>
@@ -239,6 +247,8 @@ function FilaInvitacion({ inv, onCambio, onError }) {
     try { await editarInvitacion(inv.codigo, nombre, Number(cupo)); setEditando(false); onCambio(); }
     catch (e) { onError(e.message); }
   };
+  // El link de WhatsApp se abre normalmente; el registro del envío se hace en segundo plano
+  const registrar = (tipo) => registrarEnvio(inv.codigo, tipo).then(onCambio).catch((e) => onError(e.message));
   const borrar = async () => {
     if (!window.confirm(`¿Borrar la invitación de ${inv.nombre}? También se borran su confirmación y sus canciones.`)) return;
     try { await borrarInvitacion(inv.codigo); onCambio(); }
@@ -266,15 +276,38 @@ function FilaInvitacion({ inv, onCambio, onError }) {
             )}
             {inv.restricciones && <p className="text-sm m-0 mt-1">🍽️ {inv.restricciones}</p>}
             {inv.mensaje && <p className="text-sm text-suave italic m-0 mt-1">“{inv.mensaje}”</p>}
+            {inv.enviada && (
+              <p className="text-xs text-suave m-0 mt-1">
+                Enviada el {fechaCorta(inv.enviada)}
+                {inv.recordatorio && ` · recordatorio el ${fechaCorta(inv.recordatorio)}`}
+              </p>
+            )}
           </div>
         )}
         <span className={`text-xs border rounded-boton px-2.5 py-1 shrink-0 ${COLOR_ESTADO[estado]}`}>{ETIQUETA_ESTADO[estado]}</span>
       </div>
       {!editando && (
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm">
-          <a className="text-acento" href={linkWhatsApp(inv)} target="_blank" rel="noopener">Enviar por WhatsApp</a>
+          {estado === "sin-enviar" && (
+            <a className="text-acento" href={linkWhatsApp(inv)} target="_blank" rel="noopener" onClick={() => registrar("invitacion")}>
+              Enviar por WhatsApp
+            </a>
+          )}
+          {estado === "esperando" && (
+            <a className="text-acento" href={linkRecordatorio(inv)} target="_blank" rel="noopener" onClick={() => registrar("recordatorio")}>
+              Enviar recordatorio
+            </a>
+          )}
+          {(estado === "confirmada" || estado === "no-asiste") && (
+            <a className="text-acento" href={linkWhatsApp(inv)} target="_blank" rel="noopener">Reenviar link</a>
+          )}
           <button className="bg-transparent border-0 p-0 text-acento cursor-pointer" onClick={copiar}>{copiado ? "¡Copiado!" : "Copiar link"}</button>
           <a className="text-acento" href={`/i/${inv.codigo}`} target="_blank" rel="noopener">Ver</a>
+          {estado === "sin-enviar" ? (
+            <button className="bg-transparent border-0 p-0 text-acento cursor-pointer" onClick={() => registrar("invitacion")}>Marcar como enviada</button>
+          ) : estado === "esperando" && (
+            <button className="bg-transparent border-0 p-0 text-suave cursor-pointer" onClick={() => registrar("desmarcar")}>Desmarcar envío</button>
+          )}
           <button className="bg-transparent border-0 p-0 text-acento cursor-pointer" onClick={() => setEditando(true)}>Editar</button>
           <button className="bg-transparent border-0 p-0 text-alerta cursor-pointer" onClick={borrar}>Borrar</button>
         </div>

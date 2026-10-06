@@ -47,6 +47,7 @@ Para cambiar el esquema, siempre crear una migración nueva; nunca editar una ya
 | `GET /api/panel/datos` | Invitaciones, confirmaciones y canciones (requiere token) |
 | `POST/PATCH/DELETE /api/panel/invitaciones` | Crear, editar y borrar invitaciones (requiere token) |
 | `DELETE /api/panel/canciones` | Quitar una canción (requiere token) |
+| `POST /api/panel/envios` | Registra el envío de una invitación o de un recordatorio (requiere token) |
 
 ## Panel privado
 
@@ -55,7 +56,8 @@ Está en `/panel` y se protege con la variable de entorno `PANEL_PASSWORD` (mín
 Desde el panel se puede:
 
 - Pegar la lista de invitados (una por línea; `Familia Pérez, 3` para familias, solo el nombre para invitaciones personales).
-- Enviar cada invitación por WhatsApp con el mensaje ya escrito, o copiar su link.
+- Enviar cada invitación por WhatsApp con el mensaje ya escrito, o copiar su link. El panel registra a quién ya se le mandó.
+- Mandar un recordatorio a quienes recibieron la invitación y todavía no respondieron.
 - Ver quién confirmó, cuántos van, restricciones alimentarias y mensajes.
 - Editar o borrar invitaciones y quitar canciones.
 - Exportar invitados y canciones a Excel.

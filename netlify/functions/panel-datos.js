@@ -7,7 +7,7 @@ export default async (req) => {
   if (noAutorizado) return noAutorizado;
 
   const invitaciones = await db().sql`
-    SELECT i.codigo, i.nombre, i.tipo, i.cupo, i.creada,
+    SELECT i.codigo, i.nombre, i.tipo, i.cupo, i.creada, i.enviada, i.recordatorio,
            c.asiste, c.cantidad, c.nombres, c.restricciones, c.mensaje, c.actualizada
     FROM invitaciones i
     LEFT JOIN confirmaciones c ON c.codigo = i.codigo

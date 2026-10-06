@@ -1,5 +1,5 @@
 import { FIESTA } from "../config/fiesta";
-import { fechaLarga, hora } from "../lib/fechas";
+import { fechaLarga, hora, limiteTexto } from "../lib/fechas";
 
 export const linkInvitacion = (codigo) => `${window.location.origin}/i/${codigo}`;
 
@@ -14,13 +14,29 @@ export function mensajeWhatsApp(inv) {
   );
 }
 
-export const linkWhatsApp = (inv) => `https://wa.me/?text=${encodeURIComponent(mensajeWhatsApp(inv))}`;
+export function mensajeRecordatorio(inv) {
+  const tuteo = inv.tipo === "personal";
+  return (
+    `¡Hola ${inv.nombre}! 💜\n` +
+    `Te escribo para recordarte que ${tuteo ? "todavía no confirmaste" : "todavía no confirmaron"} si ${tuteo ? "venís" : "vienen"} a mis 15. ` +
+    `${tuteo ? "Podés" : "Pueden"} hacerlo en este link hasta el ${limiteTexto}:\n` +
+    `${linkInvitacion(inv.codigo)}\n\n` +
+    `${FIESTA.nombre}`
+  );
+}
 
+export const linkWhatsApp = (inv) => `https://wa.me/?text=${encodeURIComponent(mensajeWhatsApp(inv))}`;
+export const linkRecordatorio = (inv) => `https://wa.me/?text=${encodeURIComponent(mensajeRecordatorio(inv))}`;
+
+// confirmada | no-asiste | esperando (enviada sin respuesta) | sin-enviar
 export function estadoDe(inv) {
   if (inv.asiste === true) return "confirmada";
   if (inv.asiste === false) return "no-asiste";
-  return "pendiente";
+  return inv.enviada ? "esperando" : "sin-enviar";
 }
+
+export const fechaCorta = (iso) =>
+  new Date(iso).toLocaleDateString("es-AR", { day: "numeric", month: "short", timeZone: "America/Argentina/Buenos_Aires" });
 
 // Convierte el texto pegado en una lista de invitaciones.
 // Formato: una por línea, "Nombre, cupo". Sin cupo = 1 (invitación personal).
