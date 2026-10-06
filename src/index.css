@@ -1,0 +1,60 @@
+@import "tailwindcss";
+@import "./theme/theme.css";
+
+/* Conecta las variables del tema con las clases de Tailwind:
+   bg-fondo, text-acento, border-linea, font-titulos, etc. */
+@theme inline {
+  --color-fondo: var(--c-fondo);
+  --color-fondo-2: var(--c-fondo-2);
+  --color-texto: var(--c-texto);
+  --color-suave: var(--c-texto-suave);
+  --color-acento: var(--c-acento);
+  --color-destacado: var(--c-destacado);
+  --color-alerta: var(--c-alerta);
+  --color-linea: var(--c-linea);
+  --color-campo: var(--c-campo);
+  --font-titulos: var(--f-titulos);
+  --font-texto: var(--f-texto);
+  --radius-campo: var(--r-campo);
+  --radius-boton: var(--r-boton);
+}
+
+:root {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--c-fondo);
+  color: var(--c-texto);
+  font-family: var(--f-texto);
+  font-weight: 300;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--c-acento); outline-offset: 2px; }
+
+@layer components {
+  .seccion { @apply border-t border-linea py-18; }
+  .titulo-seccion { @apply font-titulos text-[clamp(2.2rem,7vw,3rem)] leading-tight mb-5; }
+  .campo {
+    @apply w-full bg-campo border border-linea rounded-campo px-4 py-3 text-texto
+           placeholder:text-suave/60 focus:border-acento focus:outline-none;
+    font: inherit;
+  }
+  .etiqueta { @apply block text-[0.95rem] text-suave mb-1.5; }
+  .btn-primario {
+    @apply rounded-boton bg-acento text-fondo font-medium px-6 py-3.5 cursor-pointer
+           transition hover:brightness-110 active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-borde {
+    @apply inline-block rounded-boton border border-linea px-5 py-3 text-texto no-underline
+           transition hover:border-acento hover:bg-campo;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

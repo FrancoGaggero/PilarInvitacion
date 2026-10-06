@@ -1,0 +1,25 @@
+/* ============================================================
+   TEMA VISUAL — cambiando solo este archivo cambia toda la invitación.
+   Para probar otro estilo: copiá el bloque :root, cambiá los valores
+   y listo. Los componentes nunca usan colores ni fuentes "a mano".
+   ============================================================ */
+:root {
+  /* Colores */
+  --c-fondo: #1d1430;
+  --c-fondo-2: #271c3f;
+  --c-texto: #f4eef9;
+  --c-texto-suave: #c8bcdd;
+  --c-acento: #c9b4f4;     /* botones, detalles */
+  --c-destacado: #e7cf9f;  /* fechas, números */
+  --c-alerta: #f29bb8;     /* errores */
+  --c-linea: rgba(201, 180, 244, 0.28);
+  --c-campo: rgba(255, 255, 255, 0.06);
+
+  /* Tipografías */
+  --f-titulos: "Italiana", "Didot", "Bodoni 72", Georgia, serif;
+  --f-texto: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Formas */
+  --r-campo: 0.6rem;
+  --r-boton: 999px;
+}
