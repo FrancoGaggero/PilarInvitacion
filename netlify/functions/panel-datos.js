@@ -8,7 +8,7 @@ export default async (req) => {
 
   const invitaciones = await db().sql`
     SELECT i.codigo, i.nombre, i.tipo, i.cupo, i.creada, i.enviada, i.recordatorio,
-           c.asiste, c.cantidad, c.nombres, c.restricciones, c.mensaje, c.actualizada
+           c.asiste, c.cantidad, c.nombres, c.invitados, c.restricciones, c.mensaje, c.actualizada
     FROM invitaciones i
     LEFT JOIN confirmaciones c ON c.codigo = i.codigo
     ORDER BY i.creada, i.nombre`;

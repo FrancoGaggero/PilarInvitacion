@@ -6,7 +6,7 @@ export default async (req, context) => {
   if (!inv) return error("Invitación no encontrada", 404);
 
   const [conf] = await db().sql`
-    SELECT asiste, cantidad, nombres, restricciones, mensaje, actualizada
+    SELECT asiste, cantidad, nombres, invitados, restricciones, mensaje, actualizada
     FROM confirmaciones WHERE codigo = ${inv.codigo}`;
 
   return json({

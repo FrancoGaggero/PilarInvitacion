@@ -44,7 +44,7 @@ Netlify Database (Postgres). Se crea sola en el primer deploy porque el proyecto
 | Tabla | Qué guarda |
 |---|---|
 | `invitaciones` | Código, nombre, tipo (familia o personal) y cupo |
-| `confirmaciones` | Si asisten, cuántos, nombres, restricciones alimentarias y mensaje |
+| `confirmaciones` | Si asisten, cuántos, quiénes con el menú especial de cada persona (`invitados`) y mensaje |
 | `canciones` | Canciones sugeridas y qué invitación las sugirió |
 | `configuracion` | Ajustes generales (permiso de Spotify) |
 
@@ -56,6 +56,7 @@ Para cambiar el esquema, siempre crear una migración nueva; nunca editar una ya
 |---|---|
 | `GET /api/invitacion/:codigo` | Datos de la invitación, su confirmación y sus canciones |
 | `POST /api/confirmar` | Guarda o actualiza la confirmación (valida cupo y fecha límite) |
+| `POST /api/panel/confirmar` | Carga la confirmación desde el panel, sin fecha límite (requiere token) |
 | `GET /api/buscar?q=` | Buscador de canciones (por ahora de ejemplo) |
 | `POST /api/canciones` | Suma una canción (máximo por invitación y sin repetidas) |
 | `DELETE /api/canciones` | Quita una canción de esa invitación |
@@ -73,6 +74,9 @@ Tiene su propio estilo neutro y claro (tipo CRM), independiente del de la invita
 
 Desde el panel se puede:
 
+- Confirmar por alguien que avisó por teléfono ("Confirmar"/"Cambiar"), con los nombres y el menú de cada persona.
+- Ver la pestaña **Menús especiales**: cuántos vegetarianos, veganos, sin TACC y otras restricciones hay, quiénes son, y exportarlo para el salón.
+
 - Pegar la lista de invitados (una por línea; `Familia Pérez, 3` para familias, solo el nombre para invitaciones personales).
 - Enviar cada invitación por WhatsApp con el mensaje ya escrito, o copiar su link. El panel registra a quién ya se le mandó.
 - Mandar un recordatorio a quienes recibieron la invitación y todavía no respondieron.
@@ -84,7 +88,7 @@ Desde el panel se puede:
 
 | Archivo | Qué contiene |
 |---|---|
-| `src/config/fiesta.js` | Datos de la fiesta: fecha, salón, dress code, fecha límite, canciones por invitado |
+| `src/config/fiesta.js` | Datos de la fiesta: fecha, salón, dress code, fecha límite, canciones por invitado, menús especiales |
 | `src/theme/theme.css` | Colores, tipografías y bordes de toda la invitación |
 | `public/video/` | Videos y pósters (portada y ventana de peonías) |
 | `src/assets/flores/` | Ilustraciones de peonías |

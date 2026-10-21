@@ -27,6 +27,14 @@ export const FIESTA = {
     maxPorInvitacion: 5,
   },
 
+  // Menús especiales que cada invitado puede elegir (además de "Otra", texto libre).
+  // El id se guarda en la base: no cambiarlo una vez que haya confirmaciones.
+  menus: [
+    { id: "vegetariano", nombre: "Vegetariano" },
+    { id: "vegano", nombre: "Vegano" },
+    { id: "sin-tacc", nombre: "Sin TACC (celíaco)" },
+  ],
+
   // Video de fondo de la portada (archivos en /public/video). Muted y en loop.
   // Si el archivo no está, la portada queda con el fondo damasco.
   video: {

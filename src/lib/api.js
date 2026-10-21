@@ -14,7 +14,9 @@ function demo(url, opciones) {
     const inv = MOCK_INVITACIONES.find((i) => i.codigo === decodeURIComponent(codigo));
     return inv ? { ...inv, confirmacion: null, canciones: demoCanciones } : null;
   }
-  if (url.startsWith("/api/confirmar")) return { ...cuerpo, codigo: undefined };
+  if (url.startsWith("/api/confirmar")) {
+    return { ...cuerpo, codigo: undefined, nombres: (cuerpo.invitados || []).map((p) => p.nombre) };
+  }
   if (url.startsWith("/api/buscar")) {
     const q = new URL(url, location.origin).searchParams.get("q").toLowerCase();
     return MOCK_CANCIONES.filter((c) => `${c.titulo} ${c.artista}`.toLowerCase().includes(q));

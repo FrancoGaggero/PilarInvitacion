@@ -36,5 +36,7 @@ export const borrarInvitacion = (codigo) =>
   pedir("/api/panel/invitaciones", { method: "DELETE", body: JSON.stringify({ codigo }) });
 export const borrarCancion = (id) =>
   pedir("/api/panel/canciones", { method: "DELETE", body: JSON.stringify({ id }) });
+export const confirmarPorPanel = (codigo, datos) =>
+  pedir("/api/panel/confirmar", { method: "POST", body: JSON.stringify({ codigo, ...datos }) });
 export const registrarEnvio = (codigo, tipo) =>
   pedir("/api/panel/envios", { method: "POST", body: JSON.stringify({ codigo, tipo }) });

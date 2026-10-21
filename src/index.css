@@ -72,14 +72,20 @@ body {
   .p-card { @apply bg-fondo-2 border border-linea rounded-campo shadow-sm; }
   .p-btn {
     @apply inline-flex items-center justify-center gap-1.5 rounded-boton bg-acento text-white text-sm font-medium
-           px-3.5 py-2 border border-acento cursor-pointer no-underline transition hover:opacity-90
+           min-h-[2.5rem] px-3.5 py-2 border border-acento cursor-pointer no-underline transition hover:opacity-90 whitespace-nowrap
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .p-btn-sec {
     @apply inline-flex items-center justify-center gap-1.5 rounded-boton bg-fondo-2 text-texto text-sm font-medium
-           px-3 py-1.5 border border-linea cursor-pointer no-underline transition hover:bg-fondo
-           disabled:opacity-50 disabled:cursor-not-allowed;
+           min-h-[2.5rem] px-3.5 py-2 border border-linea cursor-pointer no-underline transition hover:bg-fondo
+           disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap;
   }
+  /* Botones de color según lo que hacen (mismo tamaño que .p-btn-sec) */
+  .p-btn-wa      { @apply p-btn-sec bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700; }   /* enviar por WhatsApp */
+  .p-btn-aviso   { @apply p-btn-sec bg-amber-500 border-amber-500 text-white hover:bg-amber-600; }         /* recordatorio */
+  .p-btn-link    { @apply p-btn-sec bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100; }              /* copiar link */
+  .p-btn-ok      { @apply p-btn-sec bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100; }   /* confirmar por ellos */
+  .p-btn-peligro { @apply p-btn-sec bg-red-50 border-red-200 text-red-700 hover:bg-red-100; }               /* borrar */
   .p-input {
     @apply w-full rounded-campo border border-linea bg-fondo-2 px-3 py-2 text-sm text-texto
            placeholder:text-suave focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200;
