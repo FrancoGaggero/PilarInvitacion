@@ -1,28 +1,11 @@
-@import "tailwindcss";
 @import "./theme/theme.css";
 
-/* Conecta las variables del tema con las clases de Tailwind:
-   bg-fondo, text-acento, border-linea, font-titulos, etc. */
-@theme inline {
-  --color-fondo: var(--c-fondo);
-  --color-fondo-2: var(--c-fondo-2);
-  --color-texto: var(--c-texto);
-  --color-suave: var(--c-texto-suave);
-  --color-acento: var(--c-acento);
-  --color-destacado: var(--c-destacado);
-  --color-bordo: var(--c-bordo);
-  --color-papel: var(--c-papel);
-  --color-alerta: var(--c-alerta);
-  --color-linea: var(--c-linea);
-  --color-campo: var(--c-campo);
-  --color-panel: var(--c-panel);
-  --font-titulos: var(--f-titulos);
-  --font-texto: var(--f-texto);
-  --font-script: var(--f-script);
-  --font-versal: var(--f-versal);
-  --radius-campo: var(--r-campo);
-  --radius-boton: var(--r-boton);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Las variables del tema se conectan con las clases de Tailwind
+   (bg-fondo, text-acento, border-linea, font-titulos…) en tailwind.config.js */
 
 :root {
   padding-top: env(safe-area-inset-top, 0px);
@@ -38,7 +21,17 @@ body {
   font-size: 1.1875rem;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* navegadores viejos */
   overflow-x: clip;
+}
+/* Contenedor de la invitación: recorta lo que asoma a los costados (flores) */
+.recorte-x {
+  overflow-x: hidden; /* navegadores viejos */
+  overflow-x: clip;
+}
+/* Navegadores sin unidades svh: alto de pantalla clásico */
+@supports not (min-height: 100svh) {
+  .min-h-svh { min-height: 100vh; }
 }
 :focus-visible { outline: 2px solid var(--c-acento); outline-offset: 2px; }
 ::selection { background: var(--c-bordo); color: var(--c-texto); }
@@ -60,13 +53,13 @@ body {
   .versalita { @apply font-versal uppercase tracking-[0.22em] text-[0.8rem]; }
   .campo {
     @apply w-full bg-campo border border-linea rounded-campo px-4 py-3 text-texto
-           placeholder:text-suave/60 focus:border-acento focus:outline-none;
+           placeholder:text-suave placeholder:opacity-60 focus:border-acento focus:outline-none;
     font: inherit;
   }
   .etiqueta { @apply block font-versal tracking-[0.12em] text-[0.95rem] text-suave mb-1.5; }
   .btn-primario {
     @apply relative rounded-boton bg-bordo text-texto font-versal tracking-[0.18em] uppercase text-[0.95rem] px-6 py-4 cursor-pointer
-           border border-acento transition hover:brightness-115 active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed;
+           border border-acento transition hover:brightness-110 active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed;
     outline: 1px solid var(--c-linea);
     outline-offset: 3px;
   }
@@ -74,6 +67,31 @@ body {
     @apply inline-block rounded-boton border border-linea px-5 py-3 text-texto no-underline font-versal tracking-[0.12em]
            transition hover:border-acento hover:bg-campo;
   }
+
+  /* --- Panel (tipo CRM, ver .tema-panel en theme.css) --- */
+  .p-card { @apply bg-fondo-2 border border-linea rounded-campo shadow-sm; }
+  .p-btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-boton bg-acento text-white text-sm font-medium
+           px-3.5 py-2 border border-acento cursor-pointer no-underline transition hover:opacity-90
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .p-btn-sec {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-boton bg-fondo-2 text-texto text-sm font-medium
+           px-3 py-1.5 border border-linea cursor-pointer no-underline transition hover:bg-fondo
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .p-input {
+    @apply w-full rounded-campo border border-linea bg-fondo-2 px-3 py-2 text-sm text-texto
+           placeholder:text-suave focus:outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200;
+    font-family: inherit;
+  }
+  .p-label { @apply block text-sm font-medium text-texto mb-1.5; }
+  .p-chip { @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset whitespace-nowrap; }
+}
+
+.tema-panel body {
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
 /* Brillo dorado que barre un texto (monograma, nombre) */
@@ -88,6 +106,29 @@ body {
 @keyframes brillo {
   0%, 30% { background-position: 120% 0; }
   70%, 100% { background-position: -40% 0; }
+}
+
+/* Flores: balanceo suave y pétalos que caen */
+.balanceo {
+  transform-origin: 50% 90%;
+  animation: balanceo 6s ease-in-out infinite alternate;
+}
+@keyframes balanceo {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+.petalo {
+  opacity: 0;
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.35));
+  animation-name: caer;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes caer {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.95; }
+  85% { opacity: 0.8; }
+  100% { transform: translate(var(--deriva), 105vh) rotate(var(--giro)); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

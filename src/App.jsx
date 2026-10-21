@@ -12,6 +12,9 @@ import Confirmacion from "./components/Confirmacion";
 import Canciones from "./components/Canciones";
 import Pie from "./components/Pie";
 import SinInvitacion from "./components/SinInvitacion";
+import VentanaFlores from "./components/VentanaFlores";
+import FlorFlotante, { Adorno } from "./components/flores/FlorFlotante";
+import { FLORES } from "./assets/flores";
 
 // El panel se descarga solo cuando alguien entra a /panel
 const Panel = lazy(() => import("./panel/Panel"));
@@ -31,6 +34,7 @@ function sobreYaAbierto(codigo) {
 
 export default function App() {
   if (window.location.pathname.startsWith("/panel")) {
+    document.documentElement.classList.add("tema-panel"); // estilo neutro del panel (theme.css)
     return (
       <Suspense fallback={<div className="min-h-svh grid place-items-center text-suave">Cargando…</div>}>
         <Panel />
@@ -84,26 +88,32 @@ function Invitacion() {
     return <SinInvitacion noEncontrada={estado === "no-encontrada"} onElegir={setCodigo} />;
   }
 
-  const [foto1, foto2, ...resto] = FIESTA.book;
+  const [foto1, ...resto] = FIESTA.book;
   return (
     <>
       <AnimatePresence>
         {!abierta && <Intro key="intro" nombre={invitacion.nombre} onAbrir={abrirSobre} />}
       </AnimatePresence>
       {abierta && (
-        <>
+        // recorta a los costados las flores que asoman, sin generar scroll horizontal
+        <div className="recorte-x">
           <Portada invitacion={invitacion} />
           <main className="mx-auto max-w-[36rem] px-4">
             {foto1 && <FotoSuelta foto={foto1} frase="Quince años, un solo sueño" />}
+            {/* las flores cuelgan entre secciones y se mueven a otra velocidad que el contenido */}
+            <Adorno><FlorFlotante src={FLORES.rama} className="-left-16 -top-10 w-48" velocidad={-140} giro={-12} /></Adorno>
             <Evento />
             {resto.length > 0 && <Galeria fotos={resto} />}
+            <Adorno><FlorFlotante src={FLORES.capullo} className="-right-8 -top-24 w-24" velocidad={-180} giro={20} /></Adorno>
             <DressCode />
-            {foto2 && <FotoSuelta foto={foto2} frase="Quiero que estés" />}
+            <VentanaFlores />
+            <Adorno><FlorFlotante src={FLORES.peonia} className="-left-12 -top-14 w-32" velocidad={-120} giro={-20} /></Adorno>
             <Confirmacion invitacion={invitacion} onCambio={(c) => setInvitacion({ ...invitacion, confirmacion: c })} />
+            <Adorno><FlorFlotante src={FLORES.rama} className="-right-20 -top-12 w-48" velocidad={-160} giro={170} /></Adorno>
             <Canciones invitacion={invitacion} />
           </main>
           <Pie />
-        </>
+        </div>
       )}
     </>
   );

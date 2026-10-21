@@ -1,6 +1,7 @@
 import { Component, lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FIESTA } from "../config/fiesta";
+import { FLORES } from "../assets/flores";
 
 const Destellos = lazy(() => import("./Destellos"));
 
@@ -8,7 +9,7 @@ const Destellos = lazy(() => import("./Destellos"));
 // (Lottie), se abre la solapa, sube la tarjeta y aparece la invitación.
 const ease = [0.65, 0, 0.35, 1];
 const papel = "var(--c-papel)";
-const papelSombra = "color-mix(in srgb, var(--c-papel) 88%, #6b4a2a)";
+const papelSombra = "var(--c-papel-sombra)";
 
 export default function Intro({ nombre, onAbrir }) {
   const [abierto, setAbierto] = useState(false);
@@ -28,7 +29,7 @@ export default function Intro({ nombre, onAbrir }) {
   return (
     <motion.div
       className="fixed inset-0 z-50 grid place-items-center px-6 overflow-hidden"
-      style={{ background: "color-mix(in srgb, var(--c-fondo) 94%, transparent)" }}
+      style={{ background: "var(--c-fondo)" }}
       exit={{ opacity: 0, scale: 1.08 }}
       transition={{ duration: 0.9, ease: "easeInOut" }}
     >
@@ -65,7 +66,7 @@ export default function Intro({ nombre, onAbrir }) {
             style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,.5))" }}
           >
             {/* fondo del sobre */}
-            <rect x="0" y="0" width="300" height="200" rx="3" style={{ fill: papelSombra }} />
+            <rect x="0" y="0" width="300" height="200" rx="3" style={{ fill: papelSombra, stroke: "var(--c-acento)", strokeWidth: 1 }} />
 
             {/* solapa abierta (queda detrás de la tarjeta) */}
             <motion.path
@@ -95,7 +96,11 @@ export default function Intro({ nombre, onAbrir }) {
             {/* bolsillo delantero */}
             <path d="M0 0 L132 108 Q150 120 168 108 L300 0 L300 200 L0 200 Z" style={{ fill: papel }} />
             <path d="M0 200 L128 100 M300 200 L172 100" style={{ stroke: papelSombra, strokeWidth: 1.2 }} />
-            <rect x="0" y="0" width="300" height="200" rx="3" style={{ fill: "none", stroke: "var(--c-acento)", strokeWidth: 1 }} />
+            {/* contorno sin borde superior: la tarjeta tiene que pasar por delante al subir */}
+            <path
+              d="M0 0 L0 200 L300 200 L300 0 M0 0 L132 108 Q150 120 168 108 L300 0"
+              style={{ fill: "none", stroke: "var(--c-acento)", strokeWidth: 1, strokeLinejoin: "round" }}
+            />
 
             {/* solapa cerrada: se pliega hacia arriba */}
             <motion.path
@@ -124,6 +129,17 @@ export default function Intro({ nombre, onAbrir }) {
             </motion.g>
           </motion.svg>
 
+          {/* peonía apoyada junto al lacre */}
+          <motion.img
+            src={FLORES.peonia}
+            alt=""
+            aria-hidden="true"
+            className="absolute left-[20%] top-[60%] w-[30%] pointer-events-none"
+            style={{ filter: "drop-shadow(0 6px 6px rgba(0,0,0,.35))" }}
+            initial={{ opacity: 0, rotate: -40, scale: 0.6 }}
+            animate={abierto ? { opacity: 0, y: 40, rotate: -60 } : { opacity: 1, rotate: -16, scale: 1 }}
+            transition={abierto ? { duration: 0.5 } : { type: "spring", stiffness: 160, damping: 14, delay: 0.9 }}
+          />
           {abierto && (
             <SinRomper>
               <Suspense fallback={null}>

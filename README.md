@@ -4,7 +4,9 @@ Invitación personalizada para los 15 de Pilar Crespo (7 de julio de 2027, Jano'
 
 ## Tecnologías
 
-- React + Vite, Tailwind CSS, Framer Motion, React Hook Form + Zod
+- React + Vite, Tailwind CSS 3.4, Framer Motion, React Hook Form + Zod
+
+> Tailwind se mantiene en la **3.4** a propósito: la 4 usa capas CSS nativas (`@layer`) y `color-mix()`, que los WebView viejos de Android (por ejemplo, abrir el link desde WhatsApp en algunos Xiaomi) ignoran, y la invitación se veía sin estilos. Navegadores objetivo en `browserslist` (`package.json`): Chrome/Android WebView 87+, Safari 14+. Evitar `color-mix()` en el código.
 - Netlify (hosting y Functions) y Netlify Database
 - API de Spotify para la playlist (última etapa)
 
@@ -31,7 +33,9 @@ Para trabajar solo el diseño alcanza con `npm run dev`: sin Functions, la invit
 - **Fotos del book**: `FIESTA.book` en `src/config/fiesta.js` (por ahora fotos de prueba). Cada una lleva `forma`: `ovalo`, `arco` o `marco`. Las dos primeras van sueltas entre secciones; el resto, en el carrusel "Mis momentos".
 - **Ornamentos animados** (`src/components/ornamentos/`): monograma con laureles, filigranas y esquineros que se dibujan solos, polvo dorado.
 - **Destellos Lottie**: `src/assets/lottie/destellos.json` se genera con `node scripts/destellos-lottie.mjs src/assets/lottie/destellos.json` (colores y cantidad dentro del script).
-- Con "reducir movimiento" activado en el teléfono no hay sobre ni animaciones, y el video se reemplaza por el póster.
+- **Peonías** (`src/assets/flores/`, ilustraciones WebP con fondo transparente): sticker que "se pega" en la portada (`flores/Sticker.jsx`), pétalos que caen (`flores/PetalosCayendo.jsx`), flores que flotan entre secciones a otra velocidad que el contenido (`flores/FlorFlotante.jsx` + `Adorno`, se ubican en `App.jsx`) y el ramo del pie.
+- **Ventana de peonías** (`VentanaFlores.jsx`): sección donde el video `public/video/flores.mp4` queda fijo y se ve "a través" mientras se scrollea. Video, póster y frase en `FIESTA.videoFlores`. Ningún contenedor de esa sección puede tener `transform` (rompe el fondo fijo).
+- Con "reducir movimiento" activado en el teléfono no hay sobre ni animaciones, y los videos se reemplazan por sus pósters.
 
 ## Base de datos
 
@@ -65,6 +69,8 @@ Para cambiar el esquema, siempre crear una migración nueva; nunca editar una ya
 
 Está en `/panel` y se protege con la variable de entorno `PANEL_PASSWORD` (mínimo 6 caracteres), que se carga en Netlify en *Project configuration > Environment variables*. Después de crearla o cambiarla hay que hacer un nuevo deploy.
 
+Tiene su propio estilo neutro y claro (tipo CRM), independiente del de la invitación: variables en `.tema-panel` (`src/theme/theme.css`) y clases `.p-*` en `src/index.css`.
+
 Desde el panel se puede:
 
 - Pegar la lista de invitados (una por línea; `Familia Pérez, 3` para familias, solo el nombre para invitaciones personales).
@@ -80,7 +86,9 @@ Desde el panel se puede:
 |---|---|
 | `src/config/fiesta.js` | Datos de la fiesta: fecha, salón, dress code, fecha límite, canciones por invitado |
 | `src/theme/theme.css` | Colores, tipografías y bordes de toda la invitación |
-| `public/video/` | Video y póster de la portada |
+| `public/video/` | Videos y pósters (portada y ventana de peonías) |
+| `src/assets/flores/` | Ilustraciones de peonías |
+| `tailwind.config.js` | Conecta las variables del tema con las clases de Tailwind |
 | `src/lib/api.js` | Llamadas del frontend a la API |
 | `netlify/functions/` | La API |
 | `netlify/database/migrations/` | Estructura de la base de datos |

@@ -19,9 +19,18 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "tailwindcss": "^4.0.0",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.31",
+    "tailwindcss": "^3.4.19",
     "vite": "^6.0.7"
-  }
+  },
+  "browserslist": [
+    "chrome >= 87",
+    "android >= 87",
+    "safari >= 14",
+    "ios_saf >= 14",
+    "firefox >= 78",
+    "edge >= 88"
+  ]
 }

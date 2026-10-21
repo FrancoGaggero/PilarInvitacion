@@ -29,7 +29,7 @@ export default function PolvoDorado({ cantidad = 22 }) {
       <style>{`
         .mota {
           background: radial-gradient(circle, #fff3cf 0%, var(--c-acento) 60%, transparent 100%);
-          box-shadow: 0 0 6px 1px color-mix(in srgb, var(--c-acento) 60%, transparent);
+          box-shadow: 0 0 6px 1px var(--c-oro-brillo);
           opacity: 0;
           animation-name: flotar;
           animation-timing-function: linear;

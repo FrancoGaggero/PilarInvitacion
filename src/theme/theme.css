@@ -18,6 +18,11 @@
   --c-linea: rgba(201, 164, 92, 0.38);
   --c-campo: rgba(241, 230, 210, 0.06);
   --c-panel: rgba(36, 11, 16, 0.84); /* tarjetas sobre el fondo fijo */
+  --c-velo: rgba(42, 15, 20, 0.7);         /* velo sobre los videos */
+  --c-velo-suave: rgba(42, 15, 20, 0.35);
+  --c-papel-sombra: #e1d1b6;               /* pliegues del sobre */
+  --c-oro-tenue: rgba(201, 164, 92, 0.18); /* rellenos dorados suaves */
+  --c-oro-brillo: rgba(201, 164, 92, 0.6);
 
   /* Tipografías */
   --f-script: "Pinyon Script", "Snell Roundhand", cursive;
@@ -28,4 +33,26 @@
   /* Formas */
   --r-campo: 2px;
   --r-boton: 2px;
+}
+
+/* ============================================================
+   TEMA DEL PANEL (/panel): neutro y claro, tipo CRM.
+   Se activa con la clase .tema-panel en <html> (ver App.jsx).
+   ============================================================ */
+.tema-panel {
+  --c-fondo: #f5f6f8;
+  --c-fondo-2: #ffffff;
+  --c-texto: #1f2328;
+  --c-texto-suave: #656d76;
+  --c-acento: #1f2328;      /* botón principal */
+  --c-destacado: #1f2328;
+  --c-alerta: #cf222e;
+  --c-linea: #e3e6ea;
+  --c-campo: #ffffff;
+
+  --f-titulos: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-texto: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --r-campo: 8px;
+  --r-boton: 8px;
 }

@@ -5,6 +5,9 @@ import { fechaLarga } from "../lib/fechas";
 import Monograma from "./ornamentos/Monograma";
 import Filigrana from "./ornamentos/Filigrana";
 import PolvoDorado from "./ornamentos/PolvoDorado";
+import Sticker from "./flores/Sticker";
+import PetalosCayendo from "./flores/PetalosCayendo";
+import { FLORES, PETALOS } from "../assets/flores";
 
 export default function Portada({ invitacion }) {
   const quieto = useReducedMotion();
@@ -50,16 +53,21 @@ export default function Portada({ invitacion }) {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, color-mix(in srgb, var(--c-fondo) 70%, transparent) 0%, color-mix(in srgb, var(--c-fondo) 35%, transparent) 40%, var(--c-fondo) 100%)",
+                "linear-gradient(180deg, var(--c-velo) 0%, var(--c-velo-suave) 40%, var(--c-fondo) 100%)",
             }}
           />
         </motion.div>
       )}
 
-      <PolvoDorado />
+      <PolvoDorado cantidad={12} />
+      <PetalosCayendo petalos={PETALOS} />
 
       <motion.div className="relative px-6 w-full max-w-[34rem]" style={{ y: yTexto, opacity: opacidadTexto }}>
-        <Monograma className="w-32 h-32 mx-auto mb-6" retraso={0.3} />
+        <div className="relative w-32 h-32 mx-auto mb-6">
+          <Monograma className="w-32 h-32" retraso={0.3} />
+          {/* peonía tipo sticker "pegada" sobre el monograma */}
+          <Sticker src={FLORES.peonia} className="absolute -right-14 -bottom-6 w-24" giro={14} retraso={1.1} />
+        </div>
         <motion.p className="italic text-suave text-xl m-0" {...entrar(1.6)}>{saludo}</motion.p>
         <motion.p className="versalita text-acento mt-3 mb-0" {...entrar(1.9)}>Mis quince años</motion.p>
         <motion.h1

@@ -40,7 +40,7 @@ export default function Monograma({ className = "", letra = FIESTA.nombre[0], re
               d={HOJA}
               transform={`translate(${h.x} ${h.y}) rotate(${h.rot})`}
               strokeWidth="1"
-              style={{ fill: "color-mix(in srgb, var(--c-acento) 18%, transparent)" }}
+              style={{ fill: "var(--c-oro-tenue)" }}
               variants={trazo(0.5 + i * 0.08)}
             />
           ))}

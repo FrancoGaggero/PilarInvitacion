@@ -34,6 +34,13 @@ export const FIESTA = {
     poster: "/video/portada.jpg",
   },
 
+  // Video de peonías que se ve fijo a través de la sección "ventana" (VentanaFlores.jsx)
+  videoFlores: {
+    src: "/video/flores.mp4",
+    poster: "/video/flores.jpg",
+    frase: "Florecer también es crecer",
+  },
+
   // Fotos del book. Por ahora son de PRUEBA: reemplazar src por las reales
   // (ideal: verticales 3:4, ~1200 px de alto, en /public/book).
   // forma: "ovalo" | "arco" | "marco"
