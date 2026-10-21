@@ -21,6 +21,18 @@ netlify dev
 
 Abrí la dirección que muestra `netlify dev` y elegí un invitado de prueba.
 
+Para trabajar solo el diseño alcanza con `npm run dev`: sin Functions, la invitación usa los invitados de `src/data/mockInvitaciones.js` (las confirmaciones y canciones quedan en memoria y no se guardan). Probá con `/?i=fam7k2p` o `/?i=sof3m8q`.
+
+## Estilo (victoriano, bordó y oro)
+
+- **Sobre de entrada** (`Intro.jsx`): al tocar el lacre estalla en destellos (Lottie), se abre la solapa y sube la tarjeta. Se muestra una vez por sesión del navegador.
+- **Fondo fijo** (`FondoFijo.jsx`): papel tapiz damasco; todo el contenido scrollea por encima.
+- **Video de portada**: fijo detrás de la portada, se apaga al scrollear. Se configura en `FIESTA.video` y los archivos van en `public/video/` (`portada.mp4` muted, ideal ≤ 3 MB, y `portada.jpg` como póster). Si no está, la portada queda con el damasco.
+- **Fotos del book**: `FIESTA.book` en `src/config/fiesta.js` (por ahora fotos de prueba). Cada una lleva `forma`: `ovalo`, `arco` o `marco`. Las dos primeras van sueltas entre secciones; el resto, en el carrusel "Mis momentos".
+- **Ornamentos animados** (`src/components/ornamentos/`): monograma con laureles, filigranas y esquineros que se dibujan solos, polvo dorado.
+- **Destellos Lottie**: `src/assets/lottie/destellos.json` se genera con `node scripts/destellos-lottie.mjs src/assets/lottie/destellos.json` (colores y cantidad dentro del script).
+- Con "reducir movimiento" activado en el teléfono no hay sobre ni animaciones, y el video se reemplaza por el póster.
+
 ## Base de datos
 
 Netlify Database (Postgres). Se crea sola en el primer deploy porque el proyecto incluye `@netlify/database`, y las tablas se crean con las migraciones de `netlify/database/migrations/`, que Netlify aplica en cada deploy.
@@ -68,6 +80,7 @@ Desde el panel se puede:
 |---|---|
 | `src/config/fiesta.js` | Datos de la fiesta: fecha, salón, dress code, fecha límite, canciones por invitado |
 | `src/theme/theme.css` | Colores, tipografías y bordes de toda la invitación |
+| `public/video/` | Video y póster de la portada |
 | `src/lib/api.js` | Llamadas del frontend a la API |
 | `netlify/functions/` | La API |
 | `netlify/database/migrations/` | Estructura de la base de datos |
@@ -85,4 +98,4 @@ Invitaciones de prueba cargadas en la base: `fam7k2p` (Familia Gómez, 3), `fam9
 - [x] 2. Netlify Database y confirmaciones reales
 - [x] 3. Panel privado (invitaciones, confirmaciones, exportar a Excel)
 - [ ] 4. Integración con Spotify
-- [ ] 5. Estilo final, fotos del book, dominio y pruebas
+- [ ] 5. Estilo final, fotos del book, dominio y pruebas (estilo victoriano hecho; faltan fotos reales, video, dominio y pruebas)

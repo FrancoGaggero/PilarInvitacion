@@ -10,11 +10,16 @@
   --color-suave: var(--c-texto-suave);
   --color-acento: var(--c-acento);
   --color-destacado: var(--c-destacado);
+  --color-bordo: var(--c-bordo);
+  --color-papel: var(--c-papel);
   --color-alerta: var(--c-alerta);
   --color-linea: var(--c-linea);
   --color-campo: var(--c-campo);
+  --color-panel: var(--c-panel);
   --font-titulos: var(--f-titulos);
   --font-texto: var(--f-texto);
+  --font-script: var(--f-script);
+  --font-versal: var(--f-versal);
   --radius-campo: var(--r-campo);
   --radius-boton: var(--r-boton);
 }
@@ -29,30 +34,60 @@ body {
   background: var(--c-fondo);
   color: var(--c-texto);
   font-family: var(--f-texto);
-  font-weight: 300;
-  font-size: 1.0625rem;
-  line-height: 1.6;
+  font-weight: 400;
+  font-size: 1.1875rem;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 :focus-visible { outline: 2px solid var(--c-acento); outline-offset: 2px; }
+::selection { background: var(--c-bordo); color: var(--c-texto); }
 
 @layer components {
-  .seccion { @apply border-t border-linea py-18; }
-  .titulo-seccion { @apply font-titulos text-[clamp(2.2rem,7vw,3rem)] leading-tight mb-5; }
+  /* Tarjeta victoriana que flota sobre el fondo fijo (ver Seccion.jsx) */
+  .seccion {
+    @apply relative my-14 px-6 py-14 bg-panel;
+    border: 1px solid var(--c-linea);
+    outline: 1px solid var(--c-linea);
+    outline-offset: -8px;
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8), inset 0 0 80px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+  .titulo-seccion {
+    @apply font-script font-normal text-acento text-center text-[clamp(2.9rem,13vw,3.8rem)] leading-[1.1] m-0;
+  }
+  .versalita { @apply font-versal uppercase tracking-[0.22em] text-[0.8rem]; }
   .campo {
     @apply w-full bg-campo border border-linea rounded-campo px-4 py-3 text-texto
            placeholder:text-suave/60 focus:border-acento focus:outline-none;
     font: inherit;
   }
-  .etiqueta { @apply block text-[0.95rem] text-suave mb-1.5; }
+  .etiqueta { @apply block font-versal tracking-[0.12em] text-[0.95rem] text-suave mb-1.5; }
   .btn-primario {
-    @apply rounded-boton bg-acento text-fondo font-medium px-6 py-3.5 cursor-pointer
-           transition hover:brightness-110 active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply relative rounded-boton bg-bordo text-texto font-versal tracking-[0.18em] uppercase text-[0.95rem] px-6 py-4 cursor-pointer
+           border border-acento transition hover:brightness-115 active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    outline: 1px solid var(--c-linea);
+    outline-offset: 3px;
   }
   .btn-borde {
-    @apply inline-block rounded-boton border border-linea px-5 py-3 text-texto no-underline
+    @apply inline-block rounded-boton border border-linea px-5 py-3 text-texto no-underline font-versal tracking-[0.12em]
            transition hover:border-acento hover:bg-campo;
   }
+}
+
+/* Brillo dorado que barre un texto (monograma, nombre) */
+.brillo-oro {
+  background: linear-gradient(100deg, var(--c-acento) 20%, #fff3cf 45%, var(--c-acento) 70%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brillo 5s ease-in-out infinite;
+}
+@keyframes brillo {
+  0%, 30% { background-position: 120% 0; }
+  70%, 100% { background-position: -40% 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

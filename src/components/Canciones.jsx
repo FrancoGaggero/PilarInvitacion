@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FIESTA } from "../config/fiesta";
 import { buscarCanciones, sugerirCancion, quitarCancion } from "../lib/api";
+import Seccion from "./Seccion";
 
 export default function Canciones({ invitacion }) {
   const max = FIESTA.canciones.maxPorInvitacion;
@@ -52,9 +53,8 @@ export default function Canciones({ invitacion }) {
   const yaEsta = (id) => mias.some((m) => m.id === id);
 
   return (
-    <section id="musica" className="seccion">
-      <h2 className="titulo-seccion">Que suene tu tema</h2>
-      <p className="text-suave mb-6">
+    <Seccion id="musica" antetitulo="La pista" titulo="Que suene tu tema">
+      <p className="italic text-suave text-center mb-8">
         Buscá las canciones que no pueden faltar en la pista. Van directo a la playlist de la fiesta.
       </p>
 
@@ -138,6 +138,6 @@ export default function Canciones({ invitacion }) {
           </ul>
         )}
       </div>
-    </section>
+    </Seccion>
   );
 }

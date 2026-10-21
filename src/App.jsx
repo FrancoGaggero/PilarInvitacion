@@ -1,7 +1,12 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import { AnimatePresence, MotionConfig, useReducedMotion } from "framer-motion";
 import { obtenerInvitacion } from "./lib/api";
+import { FIESTA } from "./config/fiesta";
+import FondoFijo from "./components/FondoFijo";
+import Intro from "./components/Intro";
 import Portada from "./components/Portada";
 import Evento from "./components/Evento";
+import Galeria, { FotoSuelta } from "./components/Galeria";
 import DressCode from "./components/DressCode";
 import Confirmacion from "./components/Confirmacion";
 import Canciones from "./components/Canciones";
@@ -18,6 +23,12 @@ function leerCodigo() {
   return new URLSearchParams(window.location.search).get("i");
 }
 
+// El sobre de entrada se muestra una vez por sesión del navegador
+const claveIntro = (codigo) => `sobre-abierto-${codigo}`;
+function sobreYaAbierto(codigo) {
+  try { return sessionStorage.getItem(claveIntro(codigo)) === "1"; } catch { return false; }
+}
+
 export default function App() {
   if (window.location.pathname.startsWith("/panel")) {
     return (
@@ -26,17 +37,25 @@ export default function App() {
       </Suspense>
     );
   }
-  return <Invitacion />;
+  return (
+    <MotionConfig reducedMotion="user">
+      <FondoFijo />
+      <Invitacion />
+    </MotionConfig>
+  );
 }
 
 function Invitacion() {
+  const quieto = useReducedMotion();
   const [codigo, setCodigo] = useState(leerCodigo);
   const [estado, setEstado] = useState(codigo ? "cargando" : "sin-codigo");
   const [invitacion, setInvitacion] = useState(null);
+  const [abierta, setAbierta] = useState(() => quieto || (codigo && sobreYaAbierto(codigo)));
 
   useEffect(() => {
     if (!codigo) { setEstado("sin-codigo"); return; }
     setEstado("cargando");
+    setAbierta(quieto || sobreYaAbierto(codigo));
     obtenerInvitacion(codigo)
       .then((inv) => {
         setInvitacion(inv);
@@ -46,8 +65,13 @@ function Invitacion() {
       .catch(() => setEstado("error"));
   }, [codigo]);
 
+  const abrirSobre = () => {
+    try { sessionStorage.setItem(claveIntro(codigo), "1"); } catch { /* modo privado */ }
+    setAbierta(true);
+  };
+
   if (estado === "cargando") {
-    return <div className="min-h-svh grid place-items-center text-suave">Abriendo tu invitación…</div>;
+    return <div className="min-h-svh grid place-items-center italic text-suave">Abriendo tu invitación…</div>;
   }
   if (estado === "error") {
     return (
@@ -60,16 +84,27 @@ function Invitacion() {
     return <SinInvitacion noEncontrada={estado === "no-encontrada"} onElegir={setCodigo} />;
   }
 
+  const [foto1, foto2, ...resto] = FIESTA.book;
   return (
     <>
-      <Portada invitacion={invitacion} />
-      <main className="mx-auto max-w-[38rem] px-6">
-        <Evento />
-        <DressCode />
-        <Confirmacion invitacion={invitacion} onCambio={(c) => setInvitacion({ ...invitacion, confirmacion: c })} />
-        <Canciones invitacion={invitacion} />
-      </main>
-      <Pie />
+      <AnimatePresence>
+        {!abierta && <Intro key="intro" nombre={invitacion.nombre} onAbrir={abrirSobre} />}
+      </AnimatePresence>
+      {abierta && (
+        <>
+          <Portada invitacion={invitacion} />
+          <main className="mx-auto max-w-[36rem] px-4">
+            {foto1 && <FotoSuelta foto={foto1} frase="Quince años, un solo sueño" />}
+            <Evento />
+            {resto.length > 0 && <Galeria fotos={resto} />}
+            <DressCode />
+            {foto2 && <FotoSuelta foto={foto2} frase="Quiero que estés" />}
+            <Confirmacion invitacion={invitacion} onCambio={(c) => setInvitacion({ ...invitacion, confirmacion: c })} />
+            <Canciones invitacion={invitacion} />
+          </main>
+          <Pie />
+        </>
+      )}
     </>
   );
 }

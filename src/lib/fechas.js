@@ -9,7 +9,7 @@ export const fechaLarga = cap(
 );
 export const fechaCorta = fechaFiesta.toLocaleDateString("es-AR", { day: "numeric", month: "long", timeZone: TZ });
 export const hora =
-  fechaFiesta.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", timeZone: TZ }) + " h";
+  fechaFiesta.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: TZ }) + " h";
 
 export const limiteConfirmacion = new Date(FIESTA.confirmarHasta + "T23:59:59-03:00");
 export const limiteTexto = limiteConfirmacion.toLocaleDateString("es-AR", { day: "numeric", month: "long", timeZone: TZ });

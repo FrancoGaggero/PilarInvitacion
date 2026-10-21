@@ -26,4 +26,24 @@ export const FIESTA = {
   canciones: {
     maxPorInvitacion: 5,
   },
+
+  // Video de fondo de la portada (archivos en /public/video). Muted y en loop.
+  // Si el archivo no está, la portada queda con el fondo damasco.
+  video: {
+    src: "/video/portada.mp4",
+    poster: "/video/portada.jpg",
+  },
+
+  // Fotos del book. Por ahora son de PRUEBA: reemplazar src por las reales
+  // (ideal: verticales 3:4, ~1200 px de alto, en /public/book).
+  // forma: "ovalo" | "arco" | "marco"
+  book: [
+    { src: "https://picsum.photos/seed/pilar-1/900/1200", alt: "Pilar sonriendo", forma: "ovalo" },
+    { src: "https://picsum.photos/seed/pilar-2/900/1200", alt: "Pilar con su vestido", forma: "arco" },
+    { src: "https://picsum.photos/seed/pilar-3/900/1200", alt: "Pilar en el jardín", forma: "marco" },
+    { src: "https://picsum.photos/seed/pilar-4/900/1200", alt: "Retrato de Pilar", forma: "arco" },
+    { src: "https://picsum.photos/seed/pilar-5/900/1200", alt: "Pilar mirando a cámara", forma: "ovalo" },
+    { src: "https://picsum.photos/seed/pilar-6/900/1200", alt: "Pilar riendo", forma: "marco" },
+    { src: "https://picsum.photos/seed/pilar-7/900/1200", alt: "Detalle del vestido", forma: "arco" },
+  ],
 };

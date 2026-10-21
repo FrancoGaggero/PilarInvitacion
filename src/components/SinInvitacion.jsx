@@ -1,5 +1,6 @@
 import { FIESTA } from "../config/fiesta";
 import { MOCK_INVITACIONES } from "../data/mockInvitaciones";
+import Monograma from "./ornamentos/Monograma";
 
 // Pantalla para quien entra sin código (o con uno que no existe).
 // Los accesos de prueba solo aparecen en desarrollo (npm run dev / netlify dev).
@@ -7,9 +8,9 @@ export default function SinInvitacion({ noEncontrada, onElegir }) {
   return (
     <div className="min-h-svh grid place-items-center text-center px-6 py-16">
       <div className="max-w-md">
-        <p className="font-titulos text-7xl text-acento m-0">15</p>
-        <h1 className="font-titulos text-5xl mt-4 mb-4">{FIESTA.nombre}</h1>
-        <p className="text-suave">
+        <Monograma className="w-28 h-28 mx-auto" />
+        <h1 className="font-script font-normal brillo-oro text-7xl leading-tight mt-4 mb-4 px-4">{FIESTA.nombre}</h1>
+        <p className="italic text-suave">
           {noEncontrada
             ? "No encontramos esta invitación. Revisá que el link sea el que te enviaron."
             : "Para ver tu invitación, abrí el link personal que te enviaron por WhatsApp."}

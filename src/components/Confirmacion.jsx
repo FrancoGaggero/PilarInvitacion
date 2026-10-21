@@ -5,6 +5,7 @@ import { z } from "zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { confirmarAsistencia } from "../lib/api";
 import { limiteConfirmacion, limiteTexto } from "../lib/fechas";
+import Seccion from "./Seccion";
 
 function crearEsquema(cupo) {
   return z
@@ -60,8 +61,7 @@ export default function Confirmacion({ invitacion, onCambio }) {
   };
 
   return (
-    <section id="asistencia" className="seccion">
-      <h2 className="titulo-seccion">{familia ? "¿Vienen?" : "¿Venís?"}</h2>
+    <Seccion id="asistencia" antetitulo="Confirmación" titulo={familia ? "¿Vienen?" : "¿Venís?"}>
 
       {cerrada && !confirmacion ? (
         <p className="text-suave">
@@ -71,7 +71,7 @@ export default function Confirmacion({ invitacion, onCambio }) {
         <Resumen confirmacion={confirmacion} familia={familia} puedeEditar={!cerrada} onEditar={() => setEditando(true)} />
       ) : (
         <>
-          <p className="text-suave mb-6">
+          <p className="italic text-suave text-center mb-8">
             {familia
               ? `Tienen ${cupo} lugares reservados. Confirmen antes del ${limiteTexto}.`
               : `Confirmá antes del ${limiteTexto}.`}
@@ -83,7 +83,7 @@ export default function Confirmacion({ invitacion, onCambio }) {
                 {[["si", familia ? "Sí, vamos" : "Sí, voy"], ["no", familia ? "No podemos" : "No puedo"]].map(([v, t]) => (
                   <label key={v} className="relative">
                     <input type="radio" value={v} {...register("asiste")} className="peer absolute inset-0 opacity-0 cursor-pointer" />
-                    <span className="block text-center py-3.5 px-2 border border-linea rounded-campo cursor-pointer transition peer-checked:border-acento peer-checked:bg-campo peer-checked:font-normal peer-focus-visible:outline-2 peer-focus-visible:outline-acento">
+                    <span className="block text-center py-3.5 px-2 border border-linea rounded-campo cursor-pointer transition font-versal tracking-[0.1em] peer-checked:border-acento peer-checked:bg-bordo peer-checked:text-texto peer-focus-visible:outline-2 peer-focus-visible:outline-acento">
                       {t}
                     </span>
                   </label>
@@ -141,15 +141,15 @@ export default function Confirmacion({ invitacion, onCambio }) {
           </form>
         </>
       )}
-    </section>
+    </Seccion>
   );
 }
 
 function Resumen({ confirmacion, familia, puedeEditar, onEditar }) {
   const va = confirmacion.asiste === "si";
   return (
-    <div className="border border-linea rounded-campo p-6">
-      <p className="font-titulos text-3xl text-destacado m-0">
+    <div className="text-center border border-linea rounded-campo p-6" style={{ outline: "1px solid var(--c-linea)", outlineOffset: "-6px" }}>
+      <p className="font-script text-5xl leading-tight text-acento m-0">
         {va ? (familia ? "¡Los esperamos!" : "¡Te espero!") : "Gracias por avisar"}
       </p>
       <p className="text-suave mt-2 mb-0">
